@@ -1,5 +1,5 @@
 import { db } from "@/src/db";
-import { coursesTable } from "@/src/db/schema";
+import { coursesTable } from "@/src/db/schema/course";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 

@@ -1,5 +1,5 @@
 import { db } from "@/src/db";
-import { coursesTable } from "@/src/db/schema";
+import { coursesTable } from "@/src/db/schema/course";
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 

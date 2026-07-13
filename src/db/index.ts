@@ -3,7 +3,7 @@ import mysql from "mysql2/promise";
 import "dotenv/config";
 
 const connection = await mysql.createConnection({
-  uri: process.env.DATABASE_URL,
+  uri: process.env.DATABASE_URL!,
 });
 
 export const db = drizzle(connection);

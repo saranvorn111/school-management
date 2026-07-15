@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     description: body.description,
     credits: body.credits,
     capacity: body.capacity,
-    status: body.status ?? "ACTIVE",
+    status: body.status || "ACTIVE",
   };
 
   await db.insert(coursesTable).values(course);

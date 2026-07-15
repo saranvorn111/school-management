@@ -16,8 +16,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboardIcon,
-  ListIcon,
-  ChartBarIcon,
   FolderIcon,
   UsersIcon,
   CameraIcon,
@@ -25,9 +23,6 @@ import {
   Settings2Icon,
   CircleHelpIcon,
   SearchIcon,
-  FileChartColumnIcon,
-  FileIcon,
-  CommandIcon,
   UserCheck,
   NotebookTabs,
 } from "lucide-react";
@@ -47,13 +42,12 @@ const data = {
     {
       title: "Students",
       url: "/student",
-      icon: <UsersIcon/>
+      icon: <UsersIcon />,
     },
     {
       title: "Teacher",
       url: "teacher",
-      icon: <UserCheck/>
-    
+      icon: <UserCheck />,
     },
     {
       title: "Class",

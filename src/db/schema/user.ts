@@ -3,6 +3,7 @@ import {
   varchar,
   timestamp,
   mysqlEnum,
+  boolean,
 } from "drizzle-orm/mysql-core";
 
 export const userRoleEnum = mysqlEnum("role", ["ADMIN", "TEACHER", "STUDENT"]);
@@ -29,6 +30,8 @@ export const usersTable = mysqlTable("users", {
   }).notNull(),
 
   role: userRoleEnum.notNull().default("STUDENT"),
+
+  isDeleted: boolean("is_deleted").notNull().default(false),
 
   createdAt: timestamp("created_at").defaultNow(),
 

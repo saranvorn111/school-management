@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { Geist_Mono, Noto_Serif_Khmer } from "next/font/google";
+import { AuthProvider } from "@/src/context/auth-context";
 
 const notoSerifKhmer = Noto_Serif_Khmer({
   variable: "--font-noto-serif-khmer",
@@ -29,7 +30,9 @@ export default function RootLayout({
       lang="en"
       className={`${notoSerifKhmer.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

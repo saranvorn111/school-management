@@ -40,6 +40,7 @@ export function LoginForm({
           email,
           password,
         }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -51,9 +52,7 @@ export function LoginForm({
 
       localStorage.setItem("token", data.token);
 
-      alert("Login successful!");
-
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       console.error(error);
       alert("Something went wrong.");

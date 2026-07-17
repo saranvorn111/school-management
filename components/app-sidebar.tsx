@@ -3,7 +3,6 @@
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -20,19 +19,11 @@ import {
   UsersIcon,
   CameraIcon,
   FileTextIcon,
-  Settings2Icon,
-  CircleHelpIcon,
-  SearchIcon,
   UserCheck,
   NotebookTabs,
 } from "lucide-react";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -108,25 +99,22 @@ const data = {
       ],
     },
   ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: <CircleHelpIcon />,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: <SearchIcon />,
-    },
-  ],
 };
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    password: string;
+    role: "ADMIN" | "TEACHER" | "STUDENT";
+    isDeleted: boolean;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+  };
+};
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -145,11 +133,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser
+          user={{
+            name: user.username,
+            email: user.email,
+            avatar: "/avatars/default.png",
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   );

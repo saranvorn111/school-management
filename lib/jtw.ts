@@ -1,13 +1,25 @@
 import jwt from "jsonwebtoken";
 
-const secret = process.env.JWT_SECRET!;
+const JWT_SECRET = process.env.JWT_SECRET!;
 
-export function generateToken(payload: object) {
-  return jwt.sign(payload, secret, {
+export function generateToken(payload: {
+  id: string;
+  email: string;
+  role: string;
+}) {
+  return jwt.sign(payload, JWT_SECRET, {
     expiresIn: "1d",
   });
 }
 
 export function verifyToken(token: string) {
-  return jwt.verify(token, secret);
+  try {
+    return jwt.verify(token, JWT_SECRET) as {
+      id: string;
+      email: string;
+      role: string;
+    };
+  } catch {
+    return null;
+  }
 }

@@ -1,81 +1,71 @@
-import { GraduationCap, Users, BookOpen, Award } from "lucide-react";
+import { GraduationCap, Users, BookOpen, ClipboardCheck } from "lucide-react";
 
-const statistics = [
+const items = [
   {
-    title: "Students Managed",
-    value: "10K+",
-    description: "Student records managed efficiently.",
+    title: "Student Management",
+    description:
+      "Store student information, enrollment details, and academic records in one place.",
     icon: GraduationCap,
-    color: "from-blue-500 to-cyan-500",
   },
   {
-    title: "Teachers",
-    value: "500+",
-    description: "Teachers using the platform daily.",
+    title: "Teacher Management",
+    description:
+      "Manage teacher profiles, assignments, and classroom responsibilities.",
     icon: Users,
-    color: "from-purple-500 to-indigo-500",
   },
   {
-    title: "Courses",
-    value: "120+",
-    description: "Courses organized every semester.",
+    title: "Course Management",
+    description:
+      "Create subjects, organize classes, and assign teachers for each course.",
     icon: BookOpen,
-    color: "from-emerald-500 to-green-500",
   },
   {
-    title: "System Uptime",
-    value: "99.9%",
-    description: "Reliable cloud infrastructure.",
-    icon: Award,
-    color: "from-orange-500 to-red-500",
+    title: "Attendance Tracking",
+    description:
+      "Monitor daily attendance and generate reports for students and teachers.",
+    icon: ClipboardCheck,
   },
 ];
 
 export function Statistics() {
   return (
-    <section id="statistics" className="bg-white py-24">
+    <section id="statistics" className="bg-slate-50 py-24">
       <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-600">
-            OUR IMPACT
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <span className="rounded-md bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
+            Overview
           </span>
 
-          <h2 className="mt-6 text-4xl font-bold text-slate-900">
-            Trusted by Modern Schools
+          <h2 className="mt-4 text-4xl font-bold text-slate-900">
+            Everything You Need to Manage a School
           </h2>
 
           <p className="mt-4 text-lg text-slate-600">
-            A complete platform designed to simplify academic management,
-            improve productivity, and deliver better educational experiences.
+            A simple and organized system that helps administrators, teachers,
+            and staff manage daily school operations.
           </p>
         </div>
 
-        {/* Statistics */}
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
-          {statistics.map((item) => {
+        {/* Cards */}
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {items.map((item) => {
             const Icon = item.icon;
 
             return (
               <div
                 key={item.title}
-                className="group rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-3 hover:border-blue-200 hover:shadow-2xl"
+                className="rounded-2xl border border-slate-200 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg"
               >
-                <div
-                  className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-lg`}
-                >
-                  <Icon size={30} />
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <Icon size={28} />
                 </div>
 
-                <h3 className="text-4xl font-extrabold text-slate-900">
-                  {item.value}
+                <h3 className="text-xl font-semibold text-slate-900">
+                  {item.title}
                 </h3>
 
-                <p className="mt-3 text-lg font-semibold text-slate-800">
-                  {item.title}
-                </p>
-
-                <p className="mt-2 leading-7 text-slate-500">
+                <p className="mt-3 leading-7 text-slate-600">
                   {item.description}
                 </p>
               </div>

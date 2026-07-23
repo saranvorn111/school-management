@@ -1,0 +1,1 @@
+ALTER TABLE `students` ADD `gender` enum('MALE','FEMALE') DEFAULT 'MALE' NOT NULL;

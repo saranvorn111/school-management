@@ -1,4 +1,10 @@
-import { mysqlTable, varchar, timestamp, int } from "drizzle-orm/mysql-core";
+import {
+  mysqlTable,
+  varchar,
+  timestamp,
+  int,
+  mysqlEnum,
+} from "drizzle-orm/mysql-core";
 
 export const studentsTable = mysqlTable("students", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -18,6 +24,8 @@ export const studentsTable = mysqlTable("students", {
   lastName: varchar("last_name", {
     length: 100,
   }).notNull(),
+
+  gender: mysqlEnum("gender", ["MALE", "FEMALE"]).notNull().default("MALE"),
 
   age: int("age"),
 

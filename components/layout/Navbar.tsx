@@ -56,7 +56,6 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg">
             <School size={24} />
@@ -105,7 +104,7 @@ export function Navbar() {
               </button>
 
               {/* Dropdown */}
-              <div className="absolute right-0 mt-2 hidden w-52 rounded-xl border bg-white p-2 shadow-xl group-hover:block">
+              <div className="absolute right-0​ mt-1 hidden w-52 rounded-xl border bg-white p-2 shadow-xl group-hover:block">
                 <Link
                   href="/profile"
                   className="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100"

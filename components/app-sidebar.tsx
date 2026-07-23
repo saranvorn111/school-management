@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -27,27 +28,27 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: <LayoutDashboardIcon />,
     },
     {
       title: "Students",
-      url: "/student",
+      url: "/dashboard/student",
       icon: <UsersIcon />,
     },
     {
       title: "Teacher",
-      url: "teacher",
+      url: "/dashboard/teacher",
       icon: <UserCheck />,
     },
     {
-      title: "Class",
-      url: "#",
+      title: "Room",
+      url: "/dashboard/room",
       icon: <FolderIcon />,
     },
     {
       title: "Subject",
-      url: "#",
+      url: "/dashboard/subject",
       icon: <NotebookTabs />,
     },
   ],
@@ -122,7 +123,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton
               className="data-[slot=sidebar-menu-button]:p-1.5!"
-              render={<a href="#" />}
+              render={<Link href="/" />}
             >
               <span className="text-base font-semibold">
                 School Management System

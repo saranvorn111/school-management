@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboardIcon,
-  FolderIcon,
   UsersIcon,
   CameraIcon,
   FileTextIcon,
@@ -40,11 +39,16 @@ const data = {
       title: "Teacher",
       url: "/dashboard/teacher",
       icon: <UserCheck />,
-    },
-    {
-      title: "Room",
-      url: "/dashboard/room",
-      icon: <FolderIcon />,
+      items: [
+        {
+          title: "Teacher List",
+          url: "/dashboard/teacher",
+        },
+        {
+          title: "Assign Classes",
+          url: "/dashboard/assign_class",
+        },
+      ],
     },
     {
       title: "Subject",

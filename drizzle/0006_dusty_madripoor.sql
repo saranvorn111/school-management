@@ -1,0 +1,2 @@
+ALTER TABLE `courses` ADD `teacher_id` varchar(36);--> statement-breakpoint
+ALTER TABLE `courses` ADD CONSTRAINT `courses_teacher_id_teachers_id_fk` FOREIGN KEY (`teacher_id`) REFERENCES `teachers`(`id`) ON DELETE set null ON UPDATE no action;

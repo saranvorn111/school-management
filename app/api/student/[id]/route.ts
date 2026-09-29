@@ -26,7 +26,10 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const body = await req.json();
+
+  const body = await req.json().catch(() => {
+    return NextResponse.json({ message: "invalid json" }, { status: 400 });
+  });
 
   const { studentCode, firstName, lastName, gender, age } = body;
 

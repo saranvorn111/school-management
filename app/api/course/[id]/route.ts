@@ -1,5 +1,6 @@
 import { db } from "@/src/db";
 import { coursesTable } from "@/src/db/schema/course";
+import { teachersTable } from "@/src/db/schema/teacher";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -68,11 +69,66 @@ export async function PUT(
         description: body.description,
         credits: body.credits,
         capacity: body.capacity,
+        teacherId: body.teacherId ?? null,
         status: body.status,
       })
       .where(eq(coursesTable.id, id));
 
     return NextResponse.json({ message: "Course updated" }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
+
+// assign (or unassign) a teacher to this course
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    const body = await req.json();
+
+    const course = await db
+      .select()
+      .from(coursesTable)
+      .where(eq(coursesTable.id, id))
+      .limit(1);
+
+    if (!course || course.length === 0) {
+      return NextResponse.json(
+        { message: "Course not found" },
+        { status: 404 },
+      );
+    }
+
+    if (body.teacherId) {
+      const teacher = await db
+        .select()
+        .from(teachersTable)
+        .where(eq(teachersTable.id, body.teacherId))
+        .limit(1);
+
+      if (!teacher || teacher.length === 0) {
+        return NextResponse.json(
+          { message: "Teacher not found" },
+          { status: 404 },
+        );
+      }
+    }
+
+    await db
+      .update(coursesTable)
+      .set({ teacherId: body.teacherId ?? null })
+      .where(eq(coursesTable.id, id));
+
+    return NextResponse.json(
+      { message: "Teacher assignment updated" },
+      { status: 200 },
+    );
   } catch (err) {
     return NextResponse.json(
       { message: "Internal server error" },

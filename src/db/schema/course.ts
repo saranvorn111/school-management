@@ -6,6 +6,7 @@ import {
   timestamp,
   mysqlEnum,
 } from "drizzle-orm/mysql-core";
+import { teachersTable } from "./teacher";
 
 export const courseStatusEnum = mysqlEnum("course_status", [
   "ACTIVE",
@@ -24,6 +25,11 @@ export const coursesTable = mysqlTable("courses", {
   credits: int("credits").notNull(),
 
   capacity: int("capacity").notNull(),
+
+  teacherId: varchar("teacher_id", { length: 36 }).references(
+    () => teachersTable.id,
+    { onDelete: "set null" },
+  ),
 
   status: courseStatusEnum.default("ACTIVE").notNull(),
 

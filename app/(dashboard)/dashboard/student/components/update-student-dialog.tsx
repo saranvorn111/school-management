@@ -21,7 +21,13 @@ type Student = {
   age: number;
 };
 
-export default function UpdateStudentDialog({ student }: { student: Student }) {
+export default function UpdateStudentDialog({
+  student,
+  onSuccess,
+}: {
+  student: Student;
+  onSuccess?: () => void;
+}) {
   const [open, setOpen] = useState(false);
 
   async function updateStudent(e: React.FormEvent<HTMLFormElement>) {
@@ -50,7 +56,7 @@ export default function UpdateStudentDialog({ student }: { student: Student }) {
 
     if (res.ok) {
       setOpen(false);
-      window.location.reload();
+      onSuccess?.();
     }
   }
 

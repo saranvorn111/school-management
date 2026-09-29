@@ -21,7 +21,13 @@ type Teacher = {
   status: "ACTIVE" | "INACTIVE";
 };
 
-export default function UpdateTeacherDialog({ teacher }: { teacher: Teacher }) {
+export default function UpdateTeacherDialog({
+  teacher,
+  onSuccess,
+}: {
+  teacher: Teacher;
+  onSuccess?: () => void;
+}) {
   const [open, setOpen] = useState(false);
 
   async function updateTeacher(e: React.FormEvent<HTMLFormElement>) {
@@ -50,7 +56,7 @@ export default function UpdateTeacherDialog({ teacher }: { teacher: Teacher }) {
 
     if (res.ok) {
       setOpen(false);
-      window.location.reload();
+      onSuccess?.();
     }
   }
 

@@ -24,17 +24,18 @@ export async function POST(req: Request) {
       .from(usersTable)
       .where(eq(usersTable.email, email));
 
-    if (users.length === 0) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
-
     const user = users[0];
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    // Same message for "no such user" and "wrong password" so the login form
+    // cannot be used to discover which emails are registered.
+    const passwordMatch =
+      user && !user.isDeleted
+        ? await bcrypt.compare(password, user.password)
+        : false;
 
-    if (!passwordMatch) {
+    if (!user || !passwordMatch) {
       return NextResponse.json(
-        { message: "Invalid password" },
+        { message: "Invalid email or password" },
         { status: 401 },
       );
     }
@@ -47,7 +48,6 @@ export async function POST(req: Request) {
 
     const response = NextResponse.json({
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         username: user.username,

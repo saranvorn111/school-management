@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Users, UserRoundCheck, UserRoundX, UserCog } from "lucide-react";
 
 import TeacherTable from "./teacher-table";
@@ -24,35 +24,33 @@ type Teacher = {
   updatedAt: string;
 };
 
+async function getTeachers(): Promise<Teacher[]> {
+  const response = await fetch("/api/teacher", {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch teachers");
+  }
+
+  return response.json();
+}
+
 export default function TeachersContent() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Passed to the dialogs so they can reload the list after a
+  // create/update/delete, without refreshing the whole page.
+  const refreshTeachers = useCallback(() => {
+    getTeachers().then(setTeachers).catch(console.error);
+  }, []);
+
   useEffect(() => {
-    async function fetchTeachers() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/teacher`,
-          {
-            cache: "no-store",
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch teachers");
-        }
-
-        const data = await response.json();
-
-        setTeachers(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchTeachers();
+    getTeachers()
+      .then(setTeachers)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -86,7 +84,7 @@ export default function TeachersContent() {
           </p>
         </div>
 
-        <CreateTeacherDialog />
+        <CreateTeacherDialog onSuccess={refreshTeachers} />
       </div>
 
       {/* Statistics Cards */}
@@ -132,7 +130,7 @@ export default function TeachersContent() {
       {/* Teacher Table */}
 
       <div className="rounded-xl border bg-background shadow-sm">
-        <TeacherTable teachers={teachers} />
+        <TeacherTable teachers={teachers} onChanged={refreshTeachers} />
       </div>
     </div>
   );

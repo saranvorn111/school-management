@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Users, UserRoundCheck, UserRoundX, GraduationCap } from "lucide-react";
 
 import StudentTable from "./student-table";
@@ -18,35 +18,33 @@ type Student = {
   createdAt: string;
 };
 
+async function getStudents(): Promise<Student[]> {
+  const response = await fetch("/api/student", {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch students");
+  }
+
+  return response.json();
+}
+
 export default function StudentsContent() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Passed to the dialogs so they can reload the list after a
+  // create/update/delete, without refreshing the whole page.
+  const refreshStudents = useCallback(() => {
+    getStudents().then(setStudents).catch(console.error);
+  }, []);
+
   useEffect(() => {
-    async function fetchStudents() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/student`,
-          {
-            cache: "no-store",
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch students");
-        }
-
-        const data = await response.json();
-
-        setStudents(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchStudents();
+    getStudents()
+      .then(setStudents)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -76,7 +74,7 @@ export default function StudentsContent() {
           </p>
         </div>
 
-        <CreateStudentDialog />
+        <CreateStudentDialog onSuccess={refreshStudents} />
       </div>
 
       {/* Statistics Cards */}
@@ -122,7 +120,7 @@ export default function StudentsContent() {
       {/* Student Table */}
 
       <div className="rounded-xl border bg-background shadow-sm">
-        <StudentTable students={students} />
+        <StudentTable students={students} onChanged={refreshStudents} />
       </div>
     </div>
   );

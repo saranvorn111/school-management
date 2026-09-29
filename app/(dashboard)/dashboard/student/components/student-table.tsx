@@ -22,7 +22,13 @@ type Student = {
   createdAt: string;
 };
 
-export default function StudentTable({ students }: { students: Student[] }) {
+export default function StudentTable({
+  students,
+  onChanged,
+}: {
+  students: Student[];
+  onChanged?: () => void;
+}) {
   return (
     <div className="rounded-xl border bg-white p-2 ">
       <Table>
@@ -94,9 +100,15 @@ export default function StudentTable({ students }: { students: Student[] }) {
 
                 <TableCell>
                   <div className="flex justify-center gap-2 ">
-                    <UpdateStudentDialog student={student} />
+                    <UpdateStudentDialog
+                      student={student}
+                      onSuccess={onChanged}
+                    />
 
-                    <DeleteStudentDialog studentId={student.id} />
+                    <DeleteStudentDialog
+                      studentId={student.id}
+                      onSuccess={onChanged}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

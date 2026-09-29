@@ -50,8 +50,7 @@ export function LoginForm({
         return;
       }
 
-      localStorage.setItem("token", data.token);
-
+      // The server stores the session in an httpOnly cookie; nothing to save here.
       router.push("/dashboard");
     } catch (error) {
       console.error(error);

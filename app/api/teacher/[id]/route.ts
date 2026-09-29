@@ -2,12 +2,15 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/src/db";
 import { teachersTable } from "@/src/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { requireRole, requireUser } from "@/lib/auth";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireUser();
+  if (auth.error) return auth.error;
+
   const { id } = await params;
   const teacher = await db
     .select()
@@ -18,7 +21,7 @@ export async function GET(
     return NextResponse.json({ message: "Teacher not found" }, { status: 404 });
   }
 
-  return NextResponse.json(teacher);
+  return NextResponse.json(teacher[0]);
 }
 
 export async function PUT(
@@ -26,11 +29,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const user = await getCurrentUser();
-
-    if (!user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
 
     const { id } = await params;
 
@@ -104,10 +104,15 @@ export async function PUT(
 }
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    await db.delete(teachersTable).where(eq(teachersTable.id, params.id));
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
+
+    const { id } = await params;
+
+    await db.delete(teachersTable).where(eq(teachersTable.id, id));
 
     return NextResponse.json({
       message: "Teacher deleted",

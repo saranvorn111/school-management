@@ -3,11 +3,14 @@ import { randomUUID } from "crypto";
 
 import { db } from "@/src/db";
 import { teachersTable } from "@/src/db/schema";
-import { verifyToken } from "@/lib/jtw";
+import { requireRole, requireUser } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
+    const auth = await requireUser();
+    if (auth.error) return auth.error;
+
     const teachers = await db.select().from(teachersTable);
 
     return NextResponse.json(teachers);
@@ -27,33 +30,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const authHeader = req.headers.get("authorization");
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        {
-          message: "Unauthorized",
-        },
-        {
-          status: 401,
-        },
-      );
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = verifyToken(token);
-
-    if (!decoded) {
-      return NextResponse.json(
-        {
-          message: "Invalid token",
-        },
-        {
-          status: 401,
-        },
-      );
-    }
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
 
     const body = await req.json();
 
@@ -98,7 +76,9 @@ export async function POST(req: NextRequest) {
 
     await db.insert(teachersTable).values({
       id: randomUUID(),
-      userId: decoded.id,
+      // The teacher's own login account is linked later; the creator's id
+      // must not be used here (user_id is unique per teacher).
+      userId: null,
 
       teacherCode,
 

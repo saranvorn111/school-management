@@ -25,7 +25,13 @@ type Teacher = {
   hireDate: string;
 };
 
-export default function TeacherTable({ teachers }: { teachers: Teacher[] }) {
+export default function TeacherTable({
+  teachers,
+  onChanged,
+}: {
+  teachers: Teacher[];
+  onChanged?: () => void;
+}) {
   return (
     <div className="rounded-xl border bg-white p-2 ">
       <Table>
@@ -114,9 +120,15 @@ export default function TeacherTable({ teachers }: { teachers: Teacher[] }) {
 
                 <TableCell>
                   <div className="flex justify-center gap-2 ">
-                    <UpdateTeacherDialog teacher={teacher} />
+                    <UpdateTeacherDialog
+                      teacher={teacher}
+                      onSuccess={onChanged}
+                    />
 
-                    <DeleteTeacherDialog teacherId={teacher.id} />
+                    <DeleteTeacherDialog
+                      teacherId={teacher.id}
+                      onSuccess={onChanged}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

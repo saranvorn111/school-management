@@ -3,12 +3,16 @@ import { coursesTable } from "@/src/db/schema/course";
 import { teachersTable } from "@/src/db/schema/teacher";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { requireRole, requireUser } from "@/lib/auth";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const auth = await requireUser();
+    if (auth.error) return auth.error;
+
     const { id } = await params;
     const course = await db
       .select()
@@ -38,6 +42,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
+
     const { id } = await params;
     const body = await req.json();
 
@@ -89,6 +96,9 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
+
     const { id } = await params;
     const body = await req.json();
 
@@ -143,6 +153,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
+
     const { id } = await params;
 
     const course = await db

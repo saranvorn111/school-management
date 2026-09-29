@@ -18,8 +18,10 @@ import { useState } from "react";
 
 export default function DeleteTeacherDialog({
   teacherId,
+  onSuccess,
 }: {
   teacherId: string;
+  onSuccess?: () => void;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +37,7 @@ export default function DeleteTeacherDialog({
       );
 
       if (res.ok) {
-        window.location.reload();
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Delete teacher failed:", error);

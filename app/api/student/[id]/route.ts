@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { db } from "@/src/db";
 import { studentsTable } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
+import { requireRole, requireUser } from "@/lib/auth";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireUser();
+  if (auth.error) return auth.error;
+
   const { id } = await params;
 
   const student = await db
@@ -25,11 +29,16 @@ export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireRole(["ADMIN"]);
+  if (auth.error) return auth.error;
+
   const { id } = await params;
 
-  const body = await req.json().catch(() => {
-    return NextResponse.json({ message: "invalid json" }, { status: 400 });
-  });
+  const body = await req.json().catch(() => null);
+
+  if (!body || typeof body !== "object") {
+    return NextResponse.json({ message: "Invalid JSON" }, { status: 400 });
+  }
 
   const { studentCode, firstName, lastName, gender, age } = body;
 
@@ -84,6 +93,9 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireRole(["ADMIN"]);
+  if (auth.error) return auth.error;
+
   const { id } = await params;
 
   const student = await db

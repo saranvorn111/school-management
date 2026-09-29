@@ -52,7 +52,7 @@ export function SignupForm({
     try {
       setLoading(true);
 
-      const response = await fetch("/api/auth/user", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

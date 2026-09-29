@@ -38,13 +38,6 @@ export function TeacherForm({ onSuccess }: TeacherFormProps) {
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Please login first");
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -54,7 +47,6 @@ export function TeacherForm({ onSuccess }: TeacherFormProps) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             ...form,

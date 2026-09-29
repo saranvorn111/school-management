@@ -3,12 +3,15 @@ import { randomUUID } from "crypto";
 
 import { db } from "@/src/db";
 import { studentsTable } from "@/src/db/schema";
-import { verifyToken } from "@/lib/jtw";
+import { requireRole, requireUser } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { and, gte, lte } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
+    const auth = await requireUser();
+    if (auth.error) return auth.error;
+
     const { searchParams } = new URL(req.url);
 
     const from = searchParams.get("from");
@@ -48,19 +51,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const authHeader = req.headers.get("authorization");
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = verifyToken(token);
-
-    if (!decoded) {
-      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
-    }
+    const auth = await requireRole(["ADMIN"]);
+    if (auth.error) return auth.error;
 
     const body = await req.json();
 
@@ -91,7 +83,7 @@ export async function POST(req: NextRequest) {
 
     await db.insert(studentsTable).values({
       id: randomUUID(),
-      userId: decoded.id,
+      userId: auth.user.id,
       studentCode,
       firstName,
       lastName,

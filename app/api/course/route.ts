@@ -4,8 +4,12 @@ import { teachersTable } from "@/src/db/schema/teacher";
 import { eq } from "drizzle-orm";
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
+import { requireRole, requireUser } from "@/lib/auth";
 
 export async function GET() {
+  const auth = await requireUser();
+  if (auth.error) return auth.error;
+
   const courses = await db
     .select({
       id: coursesTable.id,
@@ -28,6 +32,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const auth = await requireRole(["ADMIN"]);
+  if (auth.error) return auth.error;
+
   const body = await req.json();
 
   const course = {
